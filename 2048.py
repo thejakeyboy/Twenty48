@@ -1,22 +1,7 @@
 import random
+import numpy as np
+from time import sleep
 
-class Tile(int):
-	# def __init__(self, val=2):
-	# 	super(Tile, self).__init__()
-	# 	self.val = val
-
-	# def inc(self):
-	# 	self.val = self.val * 2
-
-	# def combine(self,tile):
-	# 	if self.val != tile.val:
-	# 		raise Exception()
-	# 	tile.inc()
-
-	def __str__(self):
-		if self == 0:
-			return 
-		return "%i"%self.val
 
 def shift(arr):
 	nonzeros = sum(arr>0)
@@ -26,6 +11,7 @@ def shift(arr):
 def arrange(arr):
 	shift(arr)
 	indold, indnew = 0,0
+	updateflag = False
 	while True:
 		if indnew >= len(arr): break
 		if indold < len(arr) - 1:
@@ -38,10 +24,10 @@ def arrange(arr):
 		else: arr[indnew] = 0
 		indnew += 1
 
-rrr = np.array([0, 2, 4,4 ,2, 0, 2, 2, 4, 32, 32, 32, 0, 0, 4, 4, 4])
+# rrr = np.array([0, 2, 4,4 ,2, 0, 2, 2, 4, 32, 32, 32, 0, 0, 4, 4, 4])
 
-arrange(rrr)
-print rrr
+# arrange(rrr)
+# print rrr
 
 
 class TileGame(object):
@@ -61,32 +47,35 @@ class TileGame(object):
 			return False
 		else:
 			i,j = pair
-			X[i,j] = 2 if np.random.rand() < .9 else 4
+			self.X[i,j] = 2 if np.random.rand() < .9 else 4
 
 	def get_open_slots(self):
-		return [(i,j) for i in range(4) for j in range(4) if self.X[i,j] > 0] 
+		return [(i,j) for i in range(4) for j in range(4) if self.X[i,j] == 0] 
 
 	def pick_rand_slot(self):
 		open_slots = self.get_open_slots()
 		if len(open_slots) == 0:
 			return False
-		return random.choice(open_slots)
+		ind = np.random.random_integers(0,len(open_slots)-1)
+		return open_slots[ind]
 
 	def __str__(self):
 		return "\n".join(map( 
 					lambda row: "\t".join(map(
 						lambda v: str(v) if v > 0 else "", 
 						row)),
-					X))
-		# return "\n".join(["".join(["\t" + str(item) + "\t" for item in row]) for row in self.X])
+					self.X))
 
-	def move(self,action=np.random.choice('up','down','left','right')):
+	def move(self,action=None):
+		if action is None: action = np.random.choice(['up','down','left','right'])
+		print "**** You are moving %s ****" % action
 		for index in range(4):
-			if action == 'up': lst = X[:,index]
-			if action == 'down': lst = X[::-1,index]
-			if action == 'left': lst = X[index,:]
-			if action == 'right': lst = X[index,::-1]
+			if action == 'up': lst = self.X[:,index]
+			if action == 'down': lst = self.X[::-1,index]
+			if action == 'left': lst = self.X[index,:]
+			if action == 'right': lst = self.X[index,::-1]
 			arrange(lst)
+		self.add_random_piece()
 
 
 
@@ -97,10 +86,16 @@ class TileGame(object):
 	# 	new_tiles = arrange(tiles)
 	# 	for pair_ind, (i,j) in enumerate(indices)
 
+if __name__ == '__main__':
+	t = TileGame()
+	print t
+	for i in range(10):
+		print "*" * 25
+		t.move()
+		print t
+		sleep(0.3)
 
-t = TileGame()
-
-print t
+	
 
 
 		

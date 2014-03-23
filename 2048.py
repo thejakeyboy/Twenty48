@@ -120,8 +120,8 @@ class TileGame(object):
       t = TileGame(self.X)
       response = t.move(action=action)
       if response:
-        perfs[action] = self.estimate_score()
-        # perfs[action] = estimate_score(self.X)
+        # perfs[action] = self.estimate_score()
+        perfs[action] = estimate_score(self.X)
     return perfs
 
   def take_best_move(self):

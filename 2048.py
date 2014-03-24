@@ -120,8 +120,8 @@ class TileGame(object):
       t = TileGame(self.X)
       response = t.move(action=action)
       if response:
-        # perfs[action] = self.estimate_score()
-        perfs[action] = estimate_score(self.X)
+        perfs[action] = self.estimate_score()
+        # perfs[action] = estimate_score(self.X)
     return perfs
 
   def take_best_move(self):
@@ -149,8 +149,8 @@ def estimate_score(X,numiter=50):
 if __name__ == '__main__':
   t = TileGame()
   print t
-  for i in range(4):
-  # while not t.is_dead():
+  # for i in range(4):
+  while not t.is_dead():
     print "best action is %s" % t.take_best_move()
     print t
   # numiter = 0

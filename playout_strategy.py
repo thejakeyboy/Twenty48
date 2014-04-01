@@ -1,6 +1,6 @@
-from 2048 import TileGame
+from twenty48 import Twenty48
 
-class PlayoutStrategy(TileGame):
+class PlayoutStrategy(Twenty48):
   """docstring for PlayoutStrategy"""
   def __init__(self):
     super(PlayoutStrategy, self).__init__()
@@ -8,7 +8,7 @@ class PlayoutStrategy(TileGame):
   def estimate_score(self,numiter=50):
     vals = []
     for i in range(numiter):
-      t = TileGame(self.X)
+      t = Twenty48(self.X)
       t.run_until_dead()
       vals.append(t.score())
     return sum(vals)/float(numiter)
@@ -16,7 +16,7 @@ class PlayoutStrategy(TileGame):
   def estimate_moves(self,numiter=50):
     perfs = dict()
     for action in ['up','down','left','right']:
-      t = TileGame(self.X)
+      t = Twenty48(self.X)
       response = t.move(action=action)
       if response: perfs[action] = self.estimate_score(numiter=numiter)
     return perfs

@@ -1,19 +1,18 @@
 import random
 
-indmap = dict()
+index_map = dict()
 for action in ['up','down','left','right']:
   for index in range(4):
     if action =='left':
-      indmap[(action,index)] = [4*index + y for y in range(4)]
+      index_map[(action,index)] = [4*index + y for y in range(4)]
     if action =='right':
-      indmap[(action,index)] = [4*index + (3-y) for y in range(4)]
+      index_map[(action,index)] = [4*index + (3-y) for y in range(4)]
     if action =='down':
-      indmap[(action,index)] = [index + 4 * (3-y) for y in range(4)]
+      index_map[(action,index)] = [index + 4 * (3-y) for y in range(4)]
     if action =='up':
-      indmap[(action,index)] = [index + 4 * y for y in range(4)]
+      index_map[(action,index)] = [index + 4 * y for y in range(4)]
 
 def update(array,inds,k,p1,p2):
-  # print "p1 = %i p2 = %i ---- %s" % (p1,p2,str(array))
   if p2 >= k: return False
   elif array[inds[p2]] == 0: return update(array,inds,k,p1,p2+1)
   elif array[inds[p1]] == 0: 
@@ -33,9 +32,10 @@ def arrange_arr(arr,inds):
   k = len(inds)
   return update(arr,inds,k,0,1)
 
-class TileGame(object):
+class Twenty48(object):
+
   def __init__(self,X = None):
-    super(TileGame, self).__init__()
+    super(Twenty48, self).__init__()
     self.X = [0]*16
     if X is not None: self.X = X + []
     else:
@@ -50,7 +50,7 @@ class TileGame(object):
 
   def __repr__(self):
     show = lambda x: str(x) if x > 0 else "."
-    return "<TileGame nummoves=%i \n%s \n ------------------------->" % (self.num_moves,str(self))
+    return "<Twenty48 nummoves=%i \n%s \n ------------------------->" % (self.num_moves,str(self))
 
   def set(self,i,j,val): self.X[4*i + j] = val
 
@@ -92,10 +92,9 @@ class TileGame(object):
     if action is None: action = random.choice(['up','down','left','right'])
     moved = False
     for index in range(4):
-      inds = indmap[(action,index)]
+      inds = index_map[(action,index)]
       result = arrange_arr(self.X,inds)
       moved = moved or result
-
     if moved:
       self.add_random_piece()
       self.num_moves += 1
@@ -103,8 +102,7 @@ class TileGame(object):
     else: return False
 
   def run_until_dead(self):
-    while not self.is_dead(): 
-      self.move()
+    while not self.is_dead(): self.move()
 
 
 

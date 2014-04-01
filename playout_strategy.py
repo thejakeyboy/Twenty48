@@ -1,11 +1,12 @@
 from twenty48 import Twenty48
 
-class PlayoutStrategy(Twenty48):
-  """docstring for PlayoutStrategy"""
-  def __init__(self):
-    super(PlayoutStrategy, self).__init__()
+class Twenty48Strategy(Twenty48):
+  """docstring for Twenty48Strategy"""
+  def __init__(self,X=None):
+    super(Twenty48Strategy, self).__init__(X)
     
   def estimate_score(self,numiter=50):
+    # raise NotImplementedError("You haven't implemented this yet")
     vals = []
     for i in range(numiter):
       t = Twenty48(self.X)
@@ -16,9 +17,9 @@ class PlayoutStrategy(Twenty48):
   def estimate_moves(self,numiter=50):
     perfs = dict()
     for action in ['up','down','left','right']:
-      t = Twenty48(self.X)
+      t = Twenty48Strategy(self.X)
       response = t.move(action=action)
-      if response: perfs[action] = self.estimate_score(numiter=numiter)
+      if response: perfs[action] = t.estimate_score(numiter=numiter)
     return perfs
 
   def take_best_move(self,numiter=50):
@@ -30,22 +31,8 @@ class PlayoutStrategy(Twenty48):
 
 
 if __name__ == '__main__':
-  t = PlayoutStrategy()
+  t = Twenty48Strategy()
   print t
-  # for i in range(4):
   while not t.is_dead():
     print "best action is %s" % t.take_best_move(numiter=50)
     print t
-  # numiter = 0
-  # while not t.is_dead():
-  #   numiter += 1
-  #   # print "*" * 25
-  #   # print "BEFORE--------------------"
-  #   # print t
-  #   t.move()
-  #   # print "AFTER---------------------"
-  #   # print t 
-  #   # sleep(0.3)
-  # print t
-  # print numiter
-  # print t.X.sum()

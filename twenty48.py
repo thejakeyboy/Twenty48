@@ -1,4 +1,5 @@
 import random
+from copy import deepcopy
 
 index_map = dict()
 for action in ['up','down','left','right']:
@@ -47,6 +48,9 @@ class Twenty48(object):
     read = lambda val: str(val) if val > 0 else "."
     strarr = [[read(self.get(i,j)) for j in range(4)] for i in range(4)]
     return "\n".join(map((lambda row: "  ".join(row)), strarr))
+
+  def copy(self):
+    return deepcopy(self)
 
   def __repr__(self):
     show = lambda x: str(x) if x > 0 else "."
@@ -104,6 +108,8 @@ class Twenty48(object):
   def run_until_dead(self):
     while not self.is_dead(): self.move()
 
+  def estimate_score(self,numiter=50):
+    raise NotImplementedError("You haven't implemented this yet")
 
 
   

@@ -14,10 +14,11 @@ class Twenty48Strategy(Twenty48):
       vals.append(t.score())
     return sum(vals)/float(numiter)
 
+
   def estimate_moves(self,numiter=50):
     perfs = dict()
     for action in ['up','down','left','right']:
-      t = Twenty48Strategy(self.X)
+      t = self.copy()
       response = t.move(action=action)
       if response: perfs[action] = t.estimate_score(numiter=numiter)
     return perfs
@@ -29,9 +30,29 @@ class Twenty48Strategy(Twenty48):
     self.move(best_action)
     return best_action
 
+class TwoLayerStrategy(Twenty48Strategy):
+  """docstring for TwoLayerStrategy"""
+  def __init__(self, X=None):
+    super(TwoLayerStrategy, self).__init__(X)
+
+  def estimate_moves(self,numiter=10):
+    perfs = dict()
+    for action in ['up','down','left','right']:
+      t = self.copy()
+      response = t.move(action=action)
+      if response:
+        # import pdb; pdb.set_trace()
+        subperfs = super(TwoLayerStrategy,t).estimate_moves(numiter=10)
+        # print subperfs
+        action_key, action_val = max(subperfs.items(),key=lambda (k,v): v)
+        perfs[action] = subperfs[action_key]
+    return perfs
+
 
 if __name__ == '__main__':
+
   t = Twenty48Strategy()
+  # t = TwoLayerStrategy()
   print t
   while not t.is_dead():
     print "best action is %s" % t.take_best_move(numiter=50)
